@@ -46,6 +46,23 @@ table {
     overflow: auto;
 }
 
+.table-header {
+    background-color: rgb(220,100,100);
+}
+
+.table-rows {
+    background-color: rgb(230,230,230);
+}
+
+.table-container th {
+    color: rgb(255,255,255) !important;
+    font-size: 1.1em;
+}
+
+.table-container td {
+    color: rgb(0,0,0) !important;
+}
+
 /* Añadidos por Angular Material */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
