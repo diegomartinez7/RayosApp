@@ -1,1 +1,40 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-image: linear-gradient(to bottom right, rgb(255,255,255), rgba(255, 150, 150, 0.8));
+    background-repeat: no-repeat;
+}
+
+html, body {
+    height: 100%;
+    overflow: auto;
+}
+
+nav {
+    background-color: rgba(255, 0, 0, 0.65);
+    border-bottom: 2px solid rgb(180,180,180);
+}
+
+.nav-link:hover {
+    background-color: rgba(255,0,0,0.4);
+    color: rgb(255,255,255) !important;
+    cursor: pointer;
+}
+
+footer {
+    background-color: rgba(255, 0, 0, 0.65);
+    border-top: 2px solid rgb(180,180,180);
+
+    /* position: fixed;
+    bottom: 0;
+    width: 100%; */
+}
+
+.menu {
+    /* background-color: rgb(180, 80, 80); */
+    /* background-color: rgba(210, 210, 210, 0.9); */
+    background-image: linear-gradient(to bottom, rgb(240,240,240), rgba(255,0,0, 0.5));
+}
