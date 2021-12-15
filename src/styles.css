@@ -63,6 +63,14 @@ table {
     color: rgb(0,0,0) !important;
 }
 
+mat-dialog-container {
+    background-color: rgba(200,70,70,0.9) !important;
+}
+
+mat-label {
+    font-size: 18px;
+}
+
 /* Añadidos por Angular Material */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
