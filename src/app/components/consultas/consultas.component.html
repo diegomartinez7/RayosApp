@@ -1,5 +1,9 @@
 <div class="container">
     <h1>Información de la institución</h1>
+    <mat-chip-list aria-label="Table Selection" >
+      <mat-chip *ngFor="let chip of chipArray; let i = index" (click)="clickEvent(i)">{{chip}}</mat-chip>
+    </mat-chip-list>
+    <br>
     <div class="table-container">
         <table mat-table [dataSource]="dataSource">
           <ng-container [matColumnDef]="column" *ngFor="let column of displayedColumns">

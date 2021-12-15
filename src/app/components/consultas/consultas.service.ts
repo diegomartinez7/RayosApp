@@ -6,27 +6,27 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class ServicesService {
-    endpoint: string = "";
+    url: string = "http://localhost:4201";
 
     constructor(private httpClient: HttpClient) { }
 
-    get(): Observable<any[]> {
-        return this.httpClient.get(this.endpoint) as Observable<any[]>;
+    get(query : string): Observable<any[]> {
+        return this.httpClient.get(this.url+"/"+query) as Observable<any[]>;
     }
 
     /* getRow(rowID: any) {
-        return this.httpClient.get(this.endpoint + `/${rowID}`) as Observable<any[]>;
+        return this.httpClient.get(this.url + `/${rowID}`) as Observable<any[]>;
     } */
 
     delete(rowID: any): Observable<any> {
-        return this.httpClient.delete(this.endpoint + `/${rowID}`) as Observable<any>;
+        return this.httpClient.delete(this.url + `/${rowID}`) as Observable<any>;
     }
 
     update(rowID: any, modifiedRow: any): Observable<any> {
-        return this.httpClient.put(this.endpoint + `/${rowID}`, modifiedRow) as Observable<any>;
+        return this.httpClient.put(this.url + `/${rowID}`, modifiedRow) as Observable<any>;
     }
 
     create(newRow: any): Observable<any> {
-        return this.httpClient.post(this.endpoint, newRow) as Observable<any>;
+        return this.httpClient.post(this.url, newRow) as Observable<any>;
     }
 }

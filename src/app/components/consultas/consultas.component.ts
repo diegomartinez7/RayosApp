@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
+import {MatChipsModule} from '@angular/material/chips';
+
+import { ServicesService } from "./consultas.service";
 
 @Component({
   selector: 'app-consultas',
@@ -11,14 +14,33 @@ export class ConsultasComponent implements OnInit {
 
   //Lógica que cambie el vector de displayedColumns de acuerdo al Chip
   displayedColumns = ['position', 'name', 'weight', 'symbol'];
-
+  displayedColumns2 = [
+  ['ID_PROVEDOR', 'NOMBRE'],
+  ['ID_EQUIPO', 'NOMBRE', 'TIPO_DEPORTE','GENERO','DIVISION'],
+  ['ID_PATRO','NOMBRE','FECHA_INICIO','FECHA_TERMINA','APORTACION'],
+  ['ID_SUCURSAL','CALLE','COLONIA','PAIS','CIUDAD','NUMEXT'],
+  ['ID_PRODUCTO','ID_SUCURSAL','EXISTENCIA','CANTIDAD'],
+  ['ID_CLIENTESOCIO','NOMBRE','PRIMAPE','SEGAPE','NIVEL','FECHA_INICIO','FECHA_TERMINA'],
+  ['ID_PRODUCTO','ID_PROVEDOR','NOMBRE','VALOR','COLOR','DESCRIPCION','LANZAMIENTO','DESCUENTO','TIPO']];
   //Asignar respuesta de la solicitud HTTP a la BD en la propiedad data del dataSource
   dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
+  chipArray: any[] = [];
+  
 
-  constructor() {
+  constructor(private _Service: ServicesService) {
+    this.chipArray = ["Provedor","Equipo","Patrocinadores","Sucursal","Almacen","Cliente_Socio","Productos"];
     //Asignar la información de una tabla por defecto cuando cargue el componente (elegir alguna)
     // this.dataSource.data = 
     //this.dataSource._updateChangeSubscription();  --> Se coloca al final de las CRUD
+  }
+
+  clickEvent(i:number) {
+    const data: any = this._Service.get("consulta?tabla="+this.chipArray[i].toUpperCase()).subscribe(data => {
+        console.log(data);
+        console.log(ELEMENT_DATA);
+        this.displayedColumns = this.displayedColumns2[i];
+        this.dataSource = new MatTableDataSource<any>(data);
+    });
   }
 
   ngOnInit(): void {
@@ -26,25 +48,18 @@ export class ConsultasComponent implements OnInit {
 
 }
 
-const ELEMENT_DATA: any[] = [
+
+
+const ELEMENT_DATA: any = [
   {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
   {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
   {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
+];
+
+const ELEMENT_DATA2: any[] = [
+  {positions: 1, name: 'AXEL', weight: 1.0079},
+  {positions: 2, name: 'Helium', weight: 4.0026},
+  {positions: 3, name: 'Lithium', weight: 6.941},
+  {positions: 4, name: 'Beryllium', weight: 9.0122},
 ];
