@@ -19,9 +19,9 @@ app.use(bodyparser.urlencoded({
 app.use(cors());
 
 var connAttrs = {
-    "user" : "maldini",
-    "password" : "acmilan",
-    "connectString": "localhost/xe"
+    "user" : "rayos",
+    "password" : "rayos",
+    "connectString": "localhost/orcl"
 }
 
 //Consulta normal
@@ -92,7 +92,7 @@ app.get('/procedure', async function (req, res) {
     });
 });
 
-app.get('/cantidad', function (req,res) {
+/*app.get('/cantidad', function (req,res) {
     "use strict";
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
@@ -131,9 +131,9 @@ app.get('/cantidad', function (req,res) {
             });
         });
     });
-});
+});*/
 
-app.delete('/:table/eliminar/:id', async function(req, res) {
+app.delete('/eliminar/:table/:id', async function(req, res) {
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
@@ -151,6 +151,8 @@ app.delete('/:table/eliminar/:id', async function(req, res) {
         const key = String(req.body.key);
         const keyType = req.body.keyType;
         var query = '';
+
+        console.log(req.body.key);
 
         if(keyType=='number'){
             id = Number(id);
@@ -207,18 +209,32 @@ app.put('/:table/actualizar/:id', async function(req, res) {
         const key = String(req.body.key);
         const keyType = req.body.keyType;
         const updateObj = req.body.updateObj;
-        var query = '';
+
+        console.log(req.body.updateObj);
+        console.log(req.body.key);
+
+        var keys = Object.keys(updateObj);
+        var query = `UPDATE ${table} SET`;
+
+        for(let i = 1; i < keys.length; i++){
+            if(isNaN(updateObj[keys[i]]))
+                query += ` ${keys[i]} = '${updateObj[keys[i]]}'`;
+            else{
+                let valor = Number(updateObj[keys[i]]);
+                query += ` ${keys[i]} = ${valor}`;
+            }
+            
+            if((i+1)!=keys.length){
+                query += ',';
+            }
+        }
 
         if(keyType=='number'){
             id = Number(id);
+            query += ` WHERE ${keys[0]} = ${id}`;
         }
-
-        switch(table){
-            case 'sucursal':
-                var id_sucursal = req.body.
-                // query = `UPDATE almacen SET id_sucursal=${}`
-            break;
-        }
+        else
+            query += ` WHERE ${keys[0]} = '${id}'`
 
         console.log(`Ejecutando: ${query}`);
 
@@ -235,7 +251,7 @@ app.put('/:table/actualizar/:id', async function(req, res) {
                 }));
             } else {
                 res.contentType('application/json').status(200);
-                res.send(JSON.stringify('Se eliminó el registro con ID: '+result.lastRowid));
+                res.send(JSON.stringify('Se actualizó el registro con ID: '+result.lastRowid));
             }
             // Release the connection
             connection.release(

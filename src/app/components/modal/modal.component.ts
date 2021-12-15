@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HttpHeaders } from '@angular/common/http';
+import { ConsultasService } from "../consultas/consultas.service";
 
 @Component({
   selector: 'app-modal',
@@ -11,17 +13,20 @@ export class ModalComponent implements OnInit {
   type: string = "";
   table: string = "";
   row: any = {};
+  rowId: string;
   columns: any[] = [];
   formGroup: FormGroup = new FormGroup({});
 
-  constructor(
+  constructor(private _Service: ConsultasService,
     private dialogRef: MatDialogRef<ModalComponent>, //referencia a sí mismo
       @Inject(MAT_DIALOG_DATA) public data: any //información pasada a este modal
   ) {
     this.type = data.type;  //creación o actualización
     this.table = data.table;  //nombre de la tabla
     this.row = data.row;  //guardamos el registro enviado
-    
+    this.rowId = data.rowId;
+
+
     if(this.row){
       if(Array.isArray(this.row)){
         this.columns = this.row;
@@ -36,7 +41,7 @@ export class ModalComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();  //creamos el formulario reactivo en base a las columnas
   }
-
+  objs: any[] = []
   initForm(): void {
     if (this.row && this.columns.length > 0) {
       //Vector de valores del registro
@@ -49,25 +54,38 @@ export class ModalComponent implements OnInit {
         obj[String(this.columns[i])] = new FormControl(valor, [Validators.required]);
       }
 
-      console.log(obj);
-
+      //
+      
       //Asignamos el objeto al FormGroup
       this.formGroup = new FormGroup(obj);
-      console.log(this.formGroup.controls);
+      //console.log(this.formGroup.controls);
     }
   }
 
   action(){
-    let registro = this.formGroup.getRawValue();
-    console.log(registro);
+    let registro: any[] = this.formGroup.getRawValue() as any[];
+    let types = "";
+
+    this.objs =(!Array.isArray(registro))? Object.values(registro) : [];
+    console.log(this.objs[0]);
+
+    if (!isNaN(this.objs[0]))
+      types="number";
+    else 
+      types = "string"; 
     
     if(this.type=='create'){
       //MANDAR A LLAMAR AL SERVICIO Y PASARLE LO NECESARIO PARA CREAR EL REGISTRO
       //EL NOMBRE DE LA TABLA YA ESTÁ EN this.table
     }
-    else{
-      //MANDAR A LLAMAR AL SERVICIO Y PASARLE LO NECESARIO PARA ACTUALIZAR EL REGISTRO
-      //EL NOMBRE DE LA TABLA YA ESTÁ EN this.table
+    else if(this.type=='update'){
+        const body = {
+            "key": this.rowId,
+            "keyType": types,
+            "updateObj" : registro
+
+        };
+        this._Service.update(this.objs[0],this.table,body);
     }
     this.close('OK');
   }

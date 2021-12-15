@@ -18,12 +18,14 @@ export class ConsultasService {
         return this.httpClient.get(this.url + `/${rowID}`) as Observable<any[]>;
     } */
 
-    delete(rowID: any, tabla: String, options: any): Observable<any> {
-        return this.httpClient.delete(this.url + `/${rowID}`) as Observable<any>;
+    delete(rowID: any, tabla: String, options: any): void {
+        console.log(this.url + `/eliminar/${tabla}/${rowID}`);
+        this.httpClient.delete(this.url + `/eliminar/${tabla}/${rowID}`, options).subscribe(() => console.log('Delete Exitoso'));
     }
 
-    update(rowID: any, modifiedRow: any): Observable<any> {
-        return this.httpClient.put(this.url + `/${rowID}`, modifiedRow) as Observable<any>;
+    update(rowID: any, table: any, options: any): void {
+        console.log(options);
+        this.httpClient.put(this.url + `/${table}/actualizar/${rowID}`, options).subscribe(() => console.log('Update Exitoso'));
     }
 
     create(newRow: any): Observable<any> {
