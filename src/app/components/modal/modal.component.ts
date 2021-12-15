@@ -9,6 +9,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class ModalComponent implements OnInit {
   type: string = "";
+  table: string = "";
   row: any = {};
   columns: any[] = [];
   formGroup: FormGroup = new FormGroup({});
@@ -17,7 +18,8 @@ export class ModalComponent implements OnInit {
     private dialogRef: MatDialogRef<ModalComponent>, //referencia a sí mismo
       @Inject(MAT_DIALOG_DATA) public data: any //información pasada a este modal
   ) {
-    this.type = data.type; //creación o actualización
+    this.type = data.type;  //creación o actualización
+    this.table = data.table;  //nombre de la tabla
     this.row = data.row;  //guardamos el registro enviado
     
     if(this.row){
@@ -61,10 +63,13 @@ export class ModalComponent implements OnInit {
     
     if(this.type=='create'){
       //MANDAR A LLAMAR AL SERVICIO Y PASARLE LO NECESARIO PARA CREAR EL REGISTRO
+      //EL NOMBRE DE LA TABLA YA ESTÁ EN this.table
     }
     else{
       //MANDAR A LLAMAR AL SERVICIO Y PASARLE LO NECESARIO PARA ACTUALIZAR EL REGISTRO
+      //EL NOMBRE DE LA TABLA YA ESTÁ EN this.table
     }
+    this.close('OK');
   }
 
   cancel(){
