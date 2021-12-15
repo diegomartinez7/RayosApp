@@ -2,12 +2,21 @@ var express = require("express");
 var app = express();
 var bodyparser = require('body-parser');
 var oracledb = require('oracledb');
+const cors = require("cors");
+
+// ?? Attaching routing to app server
+
+var corsOptions = {
+    origin: "http://localhost:4200/index.html"
+}
 
 app.use(bodyparser.json());
 
 app.use(bodyparser.urlencoded({
     extended: true
 }));
+
+app.use(cors());
 
 var connAttrs = {
     "user" : "maldini",
@@ -16,9 +25,8 @@ var connAttrs = {
 }
 
 //Consulta normal
-app.get('/proyecto', function (req, res) {
+app.get('/consulta', function (req, res) {
     "use strict";
-
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
@@ -30,7 +38,7 @@ app.get('/proyecto', function (req, res) {
             }));
             return;
         }
-        connection.execute("SELECT * FROM equipo", {}, {
+        connection.execute("SELECT * FROM " + req.query.tabla, {}, {
             outFormat: oracledb.OBJECT // Return the result as Object
         }, function (err, result) {
             if (err) {
@@ -57,7 +65,6 @@ app.get('/proyecto', function (req, res) {
         });
     });
 });
-
 
 //Consulta procedure
 app.get('/procedure', async function (req, res) {
