@@ -1,0 +1,23 @@
+<p class="fs-5 text-center">
+    <span *ngIf="type!='update'">Creación</span>
+    <span *ngIf="type=='update'">Actualización</span>
+</p>
+<form [formGroup]="formGroup">
+    <ng-container *ngFor="let column of columns">
+        <mat-form-field color="accent">
+            <mat-label>{{column | titlecase}}</mat-label>
+            <input matInput [id]="column" [formControlName]="column" [name]="column">
+            <mat-error>
+              *Debes ingresar este campo
+            </mat-error>
+        </mat-form-field>
+    </ng-container>
+</form>
+<div class="d-flex justify-content-around mt-auto">
+    <button mat-raised-button aria-label="Botón cancelar" color="warn" (click)="cancel()">
+        Cancelar
+    </button>
+    <button mat-raised-button aria-label="Botón aceptar" color="primary" (click)="action()">
+        Aceptar
+    </button>
+</div>
