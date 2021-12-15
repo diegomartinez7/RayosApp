@@ -165,23 +165,36 @@ app.put('/:table/actualizar/:id', async function(req, res) {
         const table = req.params.table;
         const key = String(req.body.key);
         const keyType = req.body.keyType;
-        const updateObj = req.body.updateObj;
-        var query = '';
+        const updateObj = JSON.parse(req.body.updateObj);
+        var keys = Object.keys(updateObj);
+        var query = `UPDATE ${table} SET`;
+
+        console.log(keys);
+
+        for(let i = 1; i < keys.length; i++){
+            if(isNaN(updateObj[keys[i]]))
+                query += ` ${keys[i]} = '${updateObj[keys[i]]}'`;
+            else{
+                let valor = Number(updateObj[keys[i]]);
+                query += ` ${keys[i]} = ${valor}`;
+            }
+            
+            if((i+1)!=keys.length){
+                query += ',';
+            }
+        }
 
         if(keyType=='number'){
             id = Number(id);
+            query += ` WHERE ${keys[0]} = ${id}`;
         }
+        else
+            query += ` WHERE ${keys[0]} = '${id}'`
 
-        switch(table){
-            case 'sucursal':
-                var id_sucursal = req.body.
-                // query = `UPDATE almacen SET id_sucursal=${}`
-            break;
-        }
 
         console.log(`Ejecutando: ${query}`);
 
-        connection.execute(query, {}, {
+        /* connection.execute(query, {}, {
             outFormat: oracledb.OBJECT, // Return the result as Object
             autoCommit: true  //Para que la eliminación se efectúe correctamente
         }, function (err, result) {
@@ -205,7 +218,7 @@ app.put('/:table/actualizar/:id', async function(req, res) {
                         console.log("GET /sendTablespace : Connection released");
                     }
             });
-        });
+        }); */
     });
 });
 
