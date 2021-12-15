@@ -10,6 +10,7 @@ import { ModalComponent } from '../modal/modal.component';
   styleUrls: ['./consultas.component.css']
 })
 export class ConsultasComponent implements OnInit {
+  tableName: string = "";
   displayedColumns = ['position', 'name', 'weight', 'symbol'];
 
   //Vectores de nombres de columnas de cada tabla
@@ -41,7 +42,8 @@ export class ConsultasComponent implements OnInit {
   }
 
   clickEvent(i:number) {
-    const data: any = this._consultasService.get("consulta?tabla="+this.chipArray[i].toUpperCase())
+    this.tableName = this.chipArray[i].toUpperCase();
+    const data: any = this._consultasService.get("consulta?tabla="+this.tableName)
       .subscribe(data => {
         this.displayedColumns = this.columnsBank[i];  //establecemos las columnas de la tabla
         if(!this.displayedColumns.find(c => c=='OPCIONES'))
@@ -56,7 +58,8 @@ export class ConsultasComponent implements OnInit {
       this.dialog.open(ModalComponent, {
         data: {
           row: this.displayedColumns.filter(c => c!='OPCIONES'),  //al crear sólo mandamos las columnas
-          type: 'create'
+          type: 'create',
+          table: this.tableName
         }
       }).afterClosed().subscribe(respuesta => {
         //Si se recibe un OK mostramos el SweetAlert correspondiente y actualizamos la tabla
@@ -85,7 +88,8 @@ export class ConsultasComponent implements OnInit {
       this.dialog.open(ModalComponent, {
         data: {
           row: element,
-          type: 'update'
+          type: 'update',
+          table: this.tableName
         }
       }).afterClosed().subscribe(respuesta => {
         //Si se recibe un OK mostramos el SweetAlert correspondiente y actualizamos la tabla
