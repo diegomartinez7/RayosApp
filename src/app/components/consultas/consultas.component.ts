@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {MatChipsModule} from '@angular/material/chips';
+import { HttpHeaders } from '@angular/common/http';
 
 import { ServicesService } from "./consultas.service";
 
@@ -21,14 +22,15 @@ export class ConsultasComponent implements OnInit {
   ['ID_SUCURSAL','CALLE','COLONIA','PAIS','CIUDAD','NUMEXT'],
   ['ID_PRODUCTO','ID_SUCURSAL','EXISTENCIA','CANTIDAD'],
   ['ID_CLIENTESOCIO','NOMBRE','PRIMAPE','SEGAPE','NIVEL','FECHA_INICIO','FECHA_TERMINA'],
-  ['ID_PRODUCTO','ID_PROVEDOR','NOMBRE','VALOR','COLOR','DESCRIPCION','LANZAMIENTO','DESCUENTO','TIPO']];
+  ['ID_PRODUCTO','ID_PROVEDOR','NOMBRE','VALOR','COLOR','DESCRIPCION','LANZAMIENTO','DESCUENTO','TIPO'],
+  ['ID_PERSONAL','ID_SUCURSAL','NOMBRE','PRIMAPE','SEGAPE','EDAD','CARGO']];
   //Asignar respuesta de la solicitud HTTP a la BD en la propiedad data del dataSource
   dataSource = new MatTableDataSource<any>(ELEMENT_DATA);
   chipArray: any[] = [];
   
 
   constructor(private _Service: ServicesService) {
-    this.chipArray = ["Provedor","Equipo","Patrocinadores","Sucursal","Almacen","Cliente_Socio","Productos"];
+    this.chipArray = ["Provedor","Equipo","Patrocinadores","Sucursal","Almacen","Cliente_Socio","Productos","Personal_Suc"];
     //Asignar la información de una tabla por defecto cuando cargue el componente (elegir alguna)
     // this.dataSource.data = 
     //this.dataSource._updateChangeSubscription();  --> Se coloca al final de las CRUD
@@ -44,6 +46,17 @@ export class ConsultasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    const options = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      body: {
+        key: 1,
+        keyType: 'test',
+      },
+    };
+    this._Service.delete("jis","provedor",options);
   }
 
 }
@@ -55,11 +68,4 @@ const ELEMENT_DATA: any = [
   {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
   {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
   {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-];
-
-const ELEMENT_DATA2: any[] = [
-  {positions: 1, name: 'AXEL', weight: 1.0079},
-  {positions: 2, name: 'Helium', weight: 4.0026},
-  {positions: 3, name: 'Lithium', weight: 6.941},
-  {positions: 4, name: 'Beryllium', weight: 9.0122},
 ];

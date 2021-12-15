@@ -18,7 +18,7 @@ export class ServicesService {
         return this.httpClient.get(this.url + `/${rowID}`) as Observable<any[]>;
     } */
 
-    delete(rowID: any): Observable<any> {
+    delete(rowID: any, tabla: String, options: any): Observable<any> {
         return this.httpClient.delete(this.url + `/${rowID}`) as Observable<any>;
     }
 
