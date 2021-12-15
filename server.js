@@ -165,11 +165,10 @@ app.put('/:table/actualizar/:id', async function(req, res) {
         const table = req.params.table;
         const key = String(req.body.key);
         const keyType = req.body.keyType;
-        const updateObj = JSON.parse(req.body.updateObj);
+        const updateObj = req.body.updateObj;
+
         var keys = Object.keys(updateObj);
         var query = `UPDATE ${table} SET`;
-
-        console.log(keys);
 
         for(let i = 1; i < keys.length; i++){
             if(isNaN(updateObj[keys[i]]))
@@ -191,10 +190,9 @@ app.put('/:table/actualizar/:id', async function(req, res) {
         else
             query += ` WHERE ${keys[0]} = '${id}'`
 
-
         console.log(`Ejecutando: ${query}`);
 
-        /* connection.execute(query, {}, {
+        connection.execute(query, {}, {
             outFormat: oracledb.OBJECT, // Return the result as Object
             autoCommit: true  //Para que la eliminación se efectúe correctamente
         }, function (err, result) {
@@ -207,7 +205,7 @@ app.put('/:table/actualizar/:id', async function(req, res) {
                 }));
             } else {
                 res.contentType('application/json').status(200);
-                res.send(JSON.stringify('Se eliminó el registro con ID: '+result.lastRowid));
+                res.send(JSON.stringify('Se actualizó el registro con ID: '+result.lastRowid));
             }
             // Release the connection
             connection.release(
@@ -218,7 +216,7 @@ app.put('/:table/actualizar/:id', async function(req, res) {
                         console.log("GET /sendTablespace : Connection released");
                     }
             });
-        }); */
+        });
     });
 });
 
