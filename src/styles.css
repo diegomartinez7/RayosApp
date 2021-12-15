@@ -1,0 +1,68 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    background-image: linear-gradient(to bottom right, rgb(255,255,255), rgba(255, 150, 150, 0.8));
+    background-repeat: no-repeat;
+}
+
+html, body {
+    height: 100%;
+    overflow: auto;
+}
+
+nav {
+    background-color: rgba(255, 0, 0, 0.65);
+    border-bottom: 2px solid rgb(180,180,180);
+}
+
+.nav-link:hover {
+    background-color: rgba(255,0,0,0.4);
+    color: rgb(255,255,255) !important;
+    cursor: pointer;
+}
+
+footer {
+    background-color: rgba(255, 0, 0, 0.65);
+    border-top: 2px solid rgb(180,180,180);
+
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.menu {
+    background-image: linear-gradient(to bottom, rgb(240,240,240), rgba(255,0,0, 0.5));
+}
+
+table {
+    width: 100%;
+}
+
+.table-container {
+    max-height: 70vh;
+    overflow: auto;
+}
+
+.table-header {
+    background-color: rgb(220,100,100);
+}
+
+.table-rows {
+    background-color: rgb(230,230,230);
+}
+
+.table-container th {
+    color: rgb(255,255,255) !important;
+    font-size: 1.1em;
+}
+
+.table-container td {
+    color: rgb(0,0,0) !important;
+}
+
+/* Añadidos por Angular Material */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
