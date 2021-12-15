@@ -77,6 +77,14 @@ export class ModalComponent implements OnInit {
     if(this.type=='create'){
       //MANDAR A LLAMAR AL SERVICIO Y PASARLE LO NECESARIO PARA CREAR EL REGISTRO
       //EL NOMBRE DE LA TABLA YA ESTÁ EN this.table
+      const body = {
+            "key": this.rowId,
+            "keyType": types,
+            "createObj" : registro
+
+      };
+      console.log("body");
+      this._Service.create(body,this.table);
     }
     else if(this.type=='update'){
         const body = {

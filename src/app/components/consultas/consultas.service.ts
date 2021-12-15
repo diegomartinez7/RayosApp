@@ -28,7 +28,7 @@ export class ConsultasService {
         this.httpClient.put(this.url + `/${table}/actualizar/${rowID}`, options).subscribe(() => console.log('Update Exitoso'));
     }
 
-    create(newRow: any): Observable<any> {
-        return this.httpClient.post(this.url, newRow) as Observable<any>;
+    create(newRow: any, table: any): void {
+        this.httpClient.post(this.url + `/${table}/create`, newRow).subscribe(() => console.log('Update Exitoso'));
     }
 }

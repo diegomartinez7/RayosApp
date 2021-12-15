@@ -52,6 +52,10 @@ export class ConsultasComponent implements OnInit {
     });
   }
 
+  createEvent() {
+    this.createRow();
+  }
+
   createRow(){
     try{
       //Abrimos el modal para edición
