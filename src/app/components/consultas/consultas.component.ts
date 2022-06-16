@@ -16,14 +16,14 @@ export class ConsultasComponent implements OnInit {
 
   //Vectores de nombres de columnas de cada tabla
   columnsBank = [
-    ['ID_PROVEDOR', 'NOMBRE'],
-    ['ID_EQUIPO', 'NOMBRE', 'TIPO_DEPORTE','GENERO','DIVISION'],
-    ['ID_PATRO','NOMBRE','FECHA_INICIO','FECHA_TERMINA','APORTACION'],
-    ['ID_SUCURSAL','CALLE','COLONIA','PAIS','CIUDAD','NUMEXT'],
-    ['ID_PRODUCTO','ID_SUCURSAL','EXISTENCIA','CANTIDAD'],
-    ['ID_CLIENTESOCIO','NOMBRE','PRIMAPE','SEGAPE','NIVEL','FECHA_INICIO','FECHA_TERMINA'],
-    ['ID_PRODUCTO','ID_PROVEDOR','NOMBRE','VALOR','COLOR','DESCRIPCION','LANZAMIENTO','DESCUENTO','TIPO'],
-  ['ID_PERSONAL','ID_SUCURSAL','NOMBRE','PRIMAPE','SEGAPE','EDAD','CARGO']
+    ['ID_provedor', 'Nombre'],
+    ['ID_equipo', 'Nombre', 'Tipo_deporte','Genero','Division'],
+    ['ID_patro','Nombre','Fecha_inicio','Fecha_termina','Aportacion'],
+    ['ID_sucursal','Calle','Colonia','Pais','Ciudad','NumExt'],
+    ['ID_producto','ID_sucursal','Existencia','Cantidad'],
+    ['ID_clientesocio','Nombre','PrimApe','SegApe','Nivel','Fecha_inicio','Fecha_termina'],
+    ['ID_producto','ID_provedor','Nombre','Valor','Color','Descripcion','Lanzamiento','Descuento','Tipo'],
+  ['ID_personal','ID_sucursal','Nombre','PrimApe','SegApe','Edad','Cargo']
   ];
 
   //DataSource para popular la tabla

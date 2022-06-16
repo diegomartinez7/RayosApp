@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var bodyparser = require('body-parser');
 var oracledb = require('oracledb');
+var mysql = require('mysql');
 const cors = require("cors");
 
 // ?? Attaching routing to app server
@@ -24,10 +25,42 @@ var connAttrs = {
     "connectString": "localhost/orcl"
 }
 
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  port:3307,
+  database: "rayosbase"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("connected!");
+});
+
+
 //Consulta normal
 app.get('/consulta', function (req, res) {
     "use strict";
-    oracledb.getConnection(connAttrs, function (err, connection) {
+    //MYSQL
+
+    con.query("SELECT * FROM " + req.query.tabla, function (err, result, fields) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error getting the dba_tablespaces",
+                detailed_message: err.message
+            }));
+        } else {
+            res.contentType('application/json').status(200);
+            res.send(JSON.stringify(result));
+        }
+        console.log(JSON.stringify(result));
+    });
+
+    //ORACLE
+    /*oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
             res.set('Content-Type', 'application/json');
@@ -63,7 +96,7 @@ app.get('/consulta', function (req, res) {
                     }
             });
         });
-    });
+    });*/
 });
 
 //Consulta procedure
@@ -134,7 +167,47 @@ app.get('/procedure', async function (req, res) {
 });*/
 
 app.delete('/eliminar/:table/:id', async function(req, res) {
-    oracledb.getConnection(connAttrs, function (err, connection) {
+    //MYSQL
+    var id = req.params.id;
+    const table = req.params.table;
+    const key = String(req.body.key);
+    const keyType = req.body.keyType;
+    var query = '';
+
+    console.log(req.body.key);
+
+    if(keyType=='number'){
+        id = Number(id);
+        query = `DELETE FROM ${table} WHERE ${key}=${id}`;
+    }
+    else
+        query = `DELETE FROM ${table} WHERE ${key}='${id}'`;
+
+    console.log(`Ejecutando: ${query}`);
+    con.query(sql, function (err, result) {console.log("Number of records deleted: " + result.affectedRows);
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error getting the dba_tablespaces",
+                detailed_message: err.message
+            }));
+        } else {
+            res.contentType('application/json').status(200);
+            res.send(JSON.stringify('Se eliminó el registro con ID: '+result.affectedRows));
+        }
+        con.release(
+            function (err) {
+                if (err) {
+                    console.error(err.message);
+                } else {
+                    console.log("GET /sendTablespace : Connection released");
+                }
+        });
+    });
+
+    //ORACLE
+    /*oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
             res.set('Content-Type', 'application/json');
@@ -188,7 +261,7 @@ app.delete('/eliminar/:table/:id', async function(req, res) {
                     }
             });
         });
-    });
+    });*/
 });
 
 app.put('/:table/actualizar/:id', async function(req, res) {
@@ -267,6 +340,49 @@ app.put('/:table/actualizar/:id', async function(req, res) {
 });
 
 app.post('/:table/create', async function(req, res) {
+    const table = req.params.table;
+    const key = String(req.body.key);
+    const keyType = req.body.keyType;
+    const createObj = req.body.createObj;
+
+    var keys = Object.keys(createObj);
+    var query = `INSERT INTO ${table} VALUES(`;
+
+    for(let i = 0; i < keys.length; i++){
+        if(isNaN(createObj[keys[i]]))
+            query += `'${createObj[keys[i]]}'`;
+        else{
+            let valor = Number(createObj[keys[i]]);
+            query += `${valor}`;
+        }
+        
+        if((i+1)!=keys.length){
+            query += ',';
+        }
+    }
+    query += ')';
+
+    console.log(`Ejecutando: ${query}`);
+
+    //MYSQL
+    con.query(query, function (err, result, fields) {
+        if (err) {
+            res.set('Content-Type', 'application/json');
+            res.status(500).send(JSON.stringify({
+                status: 500,
+                message: "Error getting the dba_tablespaces",
+                detailed_message: err.message
+            }));
+        } else {
+            res.contentType('application/json').status(200);
+            res.send(JSON.stringify(result));
+        }
+        console.log(JSON.stringify(result));
+
+    });
+
+    //ORACLE
+    /*
     oracledb.getConnection(connAttrs, function (err, connection) {
         if (err) {
             // Error connecting to DB
@@ -278,30 +394,6 @@ app.post('/:table/create', async function(req, res) {
             }));
             return;
         }
-
-        const table = req.params.table;
-        const key = String(req.body.key);
-        const keyType = req.body.keyType;
-        const createObj = req.body.createObj;
-
-        var keys = Object.keys(createObj);
-        var query = `INSERT INTO ${table} VALUES(`;
-
-        for(let i = 0; i < keys.length; i++){
-            if(isNaN(createObj[keys[i]]))
-                query += `'${createObj[keys[i]]}'`;
-            else{
-                let valor = Number(createObj[keys[i]]);
-                query += `${valor}`;
-            }
-            
-            if((i+1)!=keys.length){
-                query += ',';
-            }
-        }
-        query += ')';
-
-        console.log(`Ejecutando: ${query}`);
 
         connection.execute(query, {}, {
             outFormat: oracledb.OBJECT, // Return the result as Object
@@ -328,7 +420,7 @@ app.post('/:table/create', async function(req, res) {
                     }
             });
         });
-    });
+    });*/
 });
 
 app.listen(4201,'localhost',function(){
